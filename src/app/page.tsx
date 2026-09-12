@@ -1,4 +1,5 @@
 import { Header, Footer } from "@/components/Header";
+import { ProduceChip } from "@/components/ProduceChip";
 import { RecipeCard } from "@/components/RecipeCard";
 import { getInSeason, getPeakSeason, MONTH_NAMES } from "@/data/seasonal-produce";
 import { recipes } from "@/lib/recipes";
@@ -47,11 +48,14 @@ export default function Home() {
               <h2 className="text-2xl font-semibold text-emerald-950">
                 In season this {MONTH_NAMES[month - 1]}
               </h2>
-              {peak.length > 0 && (
-                <p className="mt-1 text-sm text-emerald-600">
-                  At peak now: {peak.map((p) => p.name).join(", ")}
-                </p>
-              )}
+              <p className="mt-1 text-sm text-emerald-600">
+                Click an ingredient to see matching recipes
+                {peak.length > 0 && (
+                  <>
+                    {" · "}At peak now: {peak.map((p) => p.name).join(", ")}
+                  </>
+                )}
+              </p>
             </div>
             <Link href="/seasonal" className="text-sm text-emerald-600 hover:underline">
               Full calendar →
@@ -59,16 +63,11 @@ export default function Home() {
           </div>
           <div className="mt-6 flex flex-wrap gap-2">
             {inSeason.map((item) => (
-              <span
+              <ProduceChip
                 key={item.name}
-                className={`rounded-full px-3 py-1.5 text-sm ${
-                  item.peak?.includes(month)
-                    ? "bg-emerald-600 text-white"
-                    : "bg-emerald-100 text-emerald-800"
-                }`}
-              >
-                {item.name}
-              </span>
+                name={item.name}
+                peak={item.peak?.includes(month)}
+              />
             ))}
           </div>
         </section>

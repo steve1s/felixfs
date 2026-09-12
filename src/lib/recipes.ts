@@ -78,6 +78,10 @@ export function getRecipeBySlug(slug: string) {
   return recipes.find((r) => r.slug === slug);
 }
 
+export function getRecipesForIngredient(ingredient: string) {
+  return matchRecipes([ingredient]);
+}
+
 export function getAllIngredientTags() {
   const tags = new Set<string>();
   recipes.forEach((r) => r.tags.forEach((t) => tags.add(t)));

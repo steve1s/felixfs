@@ -1,4 +1,5 @@
 import { Header, Footer } from "@/components/Header";
+import { ProduceChip } from "@/components/ProduceChip";
 import { SEASONAL_PRODUCE, MONTH_NAMES } from "@/data/seasonal-produce";
 
 export const metadata = {
@@ -15,7 +16,7 @@ export default function SeasonalPage() {
         <h1 className="text-3xl font-bold text-emerald-950">British seasonal calendar</h1>
         <p className="mt-2 max-w-2xl text-emerald-700">
           Eating with the seasons means better taste, lower prices, and supporting local
-          growers. Here&apos;s what&apos;s typically available across the UK growing year.
+          growers. Click any fruit or vegetable to see FareShare recipes that use it.
         </p>
 
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -49,16 +50,12 @@ export default function SeasonalPage() {
                 )}
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {items.map((item) => (
-                    <span
+                    <ProduceChip
                       key={item.name}
-                      className={`rounded-full px-2 py-0.5 text-xs ${
-                        item.peak?.includes(month)
-                          ? "bg-emerald-600 text-white"
-                          : "bg-emerald-100 text-emerald-800"
-                      }`}
-                    >
-                      {item.name}
-                    </span>
+                      name={item.name}
+                      peak={item.peak?.includes(month)}
+                      size="sm"
+                    />
                   ))}
                 </div>
               </div>
