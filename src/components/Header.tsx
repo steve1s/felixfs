@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import fileImage from "../app/file.jpeg";
+import fileImage from "../app/Felix-Signature.jpg";
 
 const nav = [
   { href: "/", label: "Home" },
@@ -14,7 +14,7 @@ export function Header() {
     <header className="border-b border-emerald-100 bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
         <Link href="/" className="flex items-center gap-2">
-          <Image src={fileImage} alt="fslogo" className="h-5.884 w-5.884 rounded-full" />
+          <Image src={fileImage} alt="fslogo" className="h-15 w-30" />
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
           {nav.map((item) => (
