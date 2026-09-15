@@ -1,6 +1,6 @@
-import OpenAI from "openai";
 import { enrichWithSeasonalContext } from "@/lib/recipes";
 import { apiError, withApiHandler } from "@/lib/api-utils";
+import { generateGeminiJson } from "@/lib/gemini";
 import { getInSeason, MONTH_NAMES } from "@/data/seasonal-produce";
 import type { DetectedIngredient } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
@@ -9,10 +9,9 @@ export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   return withApiHandler(async () => {
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) {
+    if (!process.env.GEMINI_API_KEY) {
       return apiError(
-        "OPENAI_API_KEY is not configured. Add it to .env.local and restart the dev server.",
+        "GEMINI_API_KEY is not configured. Add it to .env.local and restart the dev server.",
         500
       );
     }
@@ -37,49 +36,18 @@ export async function POST(req: NextRequest) {
       .map((p) => p.name)
       .join(", ");
 
-    const openai = new OpenAI({ apiKey });
-
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: `You are a food ingredient detection assistant for a UK seasonal cooking app run by FareShare (a food redistribution charity). 
+    const parsed = await generateGeminiJson<{
+      ingredients?: { name: string; confidence: number }[];
+    }>(
+      `You are a food ingredient detection assistant for a UK seasonal cooking app run by FareShare (a food redistribution charity).
 Identify all visible fruits, vegetables, herbs, and other food ingredients in the image.
 Focus on British produce where possible.
 Current month: ${MONTH_NAMES[month - 1]}. Currently in season in the UK: ${inSeasonNow}.
 Return ONLY valid JSON: { "ingredients": [{ "name": string, "confidence": number 0-1 }] }
 Use common British English names (e.g. "courgette" not "zucchini", "aubergine" not "eggplant").`,
-        },
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: "Identify all food ingredients visible in this image. Include fresh produce, packaged items, and anything that could be used in cooking.",
-            },
-            {
-              type: "image_url",
-              image_url: { url: image, detail: "low" },
-            },
-          ],
-        },
-      ],
-      response_format: { type: "json_object" },
-      max_tokens: 500,
-    });
-
-    const content = response.choices[0]?.message?.content;
-    if (!content) {
-      return apiError("No response from AI", 500);
-    }
-
-    let parsed: { ingredients?: { name: string; confidence: number }[] };
-    try {
-      parsed = JSON.parse(content);
-    } catch {
-      return apiError("AI returned invalid data. Please try again.", 500);
-    }
+      "Identify all food ingredients visible in this image. Include fresh produce, packaged items, and anything that could be used in cooking.",
+      image
+    );
 
     const rawIngredients = parsed.ingredients ?? [];
     if (rawIngredients.length === 0) {

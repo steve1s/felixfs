@@ -6,7 +6,7 @@ A web app that helps users cook with **British seasonal produce**, encouraging p
 
 - **106 FareShare recipes** extracted from [fareshare.org.uk/recipes](https://fareshare.org.uk/recipes/)
 - **British seasonal calendar** — see what's in season month by month
-- **Ingredient scanning** — upload a photo or use your camera; OpenAI Vision detects ingredients
+- **Ingredient scanning** — upload a photo or use your camera; Gemini detects ingredients
 - **Recipe matching** — finds FareShare recipes that use what you have
 - **AI recipe generation** — creates budget-friendly, seasonal meal ideas in FareShare's style
 
@@ -14,7 +14,7 @@ A web app that helps users cook with **British seasonal produce**, encouraging p
 
 ```bash
 npm install
-cp .env.example .env.local   # add your OPENAI_API_KEY
+cp .env.example .env.local   # add your GEMINI_API_KEY
 npm run dev
 ```
 
@@ -35,7 +35,7 @@ This updates `src/data/recipes.json`.
 ```
 src/
   app/
-    api/detect-ingredients/   # OpenAI Vision — object/ingredient detection
+    api/detect-ingredients/   # Gemini Vision — object/ingredient detection
     api/recipes/match/        # Match detected ingredients to FareShare recipes
     api/recipes/generate/     # AI-generated seasonal recipe
     scan/                     # Camera / upload UI
@@ -52,7 +52,7 @@ src/
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `OPENAI_API_KEY` | Yes (for scan/generate) | OpenAI API key for Vision + recipe generation |
+| `GEMINI_API_KEY` | Yes (for scan/generate) | Google Gemini API key for Vision + recipe generation |
 
 Browse and seasonal pages work without an API key. Scan and AI generation require it.
 
@@ -60,7 +60,7 @@ Browse and seasonal pages work without an API key. Scan and AI generation requir
 
 - Next.js 16 (App Router)
 - TypeScript + Tailwind CSS
-- OpenAI GPT-4o-mini (vision + text)
+- Google Gemini 2.5 Flash (vision + text)
 - FareShare WordPress REST API for recipe data
 
 ## Notes for FareShare team
