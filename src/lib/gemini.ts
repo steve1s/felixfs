@@ -13,7 +13,7 @@ export function getGeminiClient() {
 }
 
 export function parseDataUrl(image: string) {
-  const match = image.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/s);
+  const match = image.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
   if (match) {
     return { mimeType: match[1], data: match[2] };
   }
